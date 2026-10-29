@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#f7f4f0">
+<title>测测你的分手人格丨分手后你是哪种德行？</title>
+<style>
+:root{
+  --bg:#f7f4f0; --card:#ffffff;
+  --ink:#4b4a47; --ink2:#8f8b85;
+  --line:#ece6de;
+  --sage:#a3b1a1; --sage-l:#e9eee6;
+  --clay:#cbb9ab; --rose:#e8d8d0;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html,body{margin:0;padding:0;}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+  color:var(--ink);
+  background:
+    radial-gradient(circle at 10% 6%, #eef1ea 0%, transparent 42%),
+    radial-gradient(circle at 92% 94%, #f6ece7 0%, transparent 42%),
+    var(--bg);
+  background-attachment:fixed;
+  -webkit-font-smoothing:antialiased;
+  min-height:100vh;
+}
+.app{max-width:480px;margin:0 auto;padding:32px 20px 56px;min-height:100vh;}
+.screen{display:none;}
+.screen.active{display:block;animation:fade .28s ease;}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+/* ---------- 密码页 ---------- */
+.lock-wrap{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:70vh;text-align:center;}
+.lock-icon{width:58px;height:58px;border-radius:18px;background:linear-gradient(135deg,#dfe6da,#f2e4dd);margin-bottom:26px;position:relative;}
+.lock-icon::after{content:"";position:absolute;left:50%;top:50%;width:14px;height:14px;border-radius:50%;background:#fff;transform:translate(-50%,-50%);}
+.lock-title{font-size:21px;font-weight:700;color:#3f4740;margin:0 0 10px;letter-spacing:.5px;}
+.lock-sub{font-size:13.5px;color:var(--ink2);margin:0 0 32px;letter-spacing:.4px;}
+.lock-input{
+  width:100%;border:1.5px solid var(--line);border-radius:16px;
+  padding:15px 18px;font-size:17px;text-align:center;letter-spacing:6px;
+  color:var(--ink);background:#fff;font-family:inherit;outline:none;
+  transition:.2s;margin-bottom:14px;
+}
+.lock-input:focus{border-color:var(--sage);box-shadow:0 0 0 3px var(--sage-l);}
+.lock-input::placeholder{letter-spacing:2px;color:#c9c4bc;font-size:14px;}
+.lock-err{font-size:13px;color:#c98a7a;height:18px;margin-bottom:14px;letter-spacing:.4px;}
+
+.btn-main{
+  width:100%;border:none;border-radius:16px;padding:16px;
+  font-size:16px;font-weight:600;color:#fff;background:var(--sage);
+  font-family:inherit;letter-spacing:.8px;
+  box-shadow:0 8px 20px rgba(163,177,161,.32);
+  transition:transform .15s ease,background .2s ease,box-shadow .2s ease;
+  cursor:pointer;
+}
+.btn-main:disabled{background:#dcd8d2;box-shadow:none;cursor:default;}
+.btn-main:active:not(:disabled){transform:scale(.985);}
+
+/* ---------- 封面 ---------- */
+.cover-deco{width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,#dfe6da,#f2e4dd);margin:24px 0 28px;position:relative;}
+.cover-deco::after{content:"";position:absolute;right:-14px;bottom:-8px;width:26px;height:26px;border-radius:50%;background:#f0e2da;}
+.cover-title{font-size:27px;line-height:1.45;font-weight:700;letter-spacing:.6px;color:#3f4740;margin:0 0 10px;}
+.cover-sub{font-size:16px;color:var(--ink2);margin:0 0 22px;letter-spacing:.4px;}
+.cover-line{width:44px;height:3px;border-radius:3px;background:var(--sage);opacity:.65;margin-bottom:22px;}
+.cover-desc{font-size:15px;line-height:1.95;color:#6b6862;margin:0 0 20px;}
+.cover-meta{font-size:13px;color:#a8a49d;letter-spacing:.6px;margin-bottom:34px;}
+.cover-note{font-size:12px;color:#b6b2ab;text-align:center;margin-top:16px;letter-spacing:.4px;}
+
+/* ---------- 答题 ---------- */
+.quiz-top{display:flex;align-items:center;gap:12px;margin-bottom:26px;}
+.back-btn{
+  width:34px;height:34px;flex:0 0 34px;border-radius:50%;
+  border:1.5px solid var(--line);background:#fff;color:var(--ink2);
+  font-size:15px;line-height:1;cursor:pointer;font-family:inherit;
+  display:flex;align-items:center;justify-content:center;transition:.2s;
+}
+.back-btn:active{background:#f2efe9;}
+.progress-wrap{flex:1;}
+.progress-bar{height:5px;border-radius:5px;background:#eae5dd;overflow:hidden;}
+.progress-fill{height:100%;width:0;border-radius:5px;background:linear-gradient(90deg,#bcc9b8,#a3b1a1);transition:width .3s ease;}
+.progress-num{font-size:12px;color:#a8a49d;letter-spacing:.5px;flex:0 0 auto;font-variant-numeric:tabular-nums;}
+.q-card{margin-bottom:26px;}
+.q-index{font-size:12px;letter-spacing:2px;color:var(--sage);font-weight:700;margin-bottom:10px;}
+.q-title{font-size:19px;line-height:1.6;font-weight:600;color:#41403d;margin:0 0 24px;letter-spacing:.2px;}
+.opt{
+  position:relative;display:block;width:100%;text-align:left;
+  background:#fff;border:1.5px solid var(--line);
+  border-radius:16px;padding:16px 18px 16px 44px;
+  margin-bottom:12px;font-size:15px;line-height:1.55;
+  color:#57554f;font-family:inherit;cursor:pointer;transition:all .18s ease;
+}
+.opt .dot{position:absolute;left:17px;top:50%;transform:translateY(-50%);width:15px;height:15px;border-radius:50%;border:1.5px solid #ddd6cd;background:#fff;transition:.2s;}
+.opt.selected{background:var(--sage-l);border-color:var(--sage);color:#3f4a3e;font-weight:500;}
+.opt.selected .dot{border-color:var(--sage);background:var(--sage);box-shadow:inset 0 0 0 3px var(--sage-l);}
+.opt:active{transform:scale(.995);}
+
+/* ---------- 结果页 ---------- */
+.shot-card{
+  background:#fff;
+  border-radius:24px;
+  padding:30px 24px 20px;
+  margin-bottom:16px;
+  box-shadow:0 8px 30px rgba(180,170,158,.13);
+  text-align:center;
+}
+.result-label{font-size:12.5px;color:var(--ink2);letter-spacing:2px;margin:0 0 12px;}
+.result-city{font-size:32px;font-weight:700;letter-spacing:1px;color:#3f4740;margin:0 0 14px;line-height:1.3;}
+.result-tags{display:flex;flex-wrap:wrap;gap:7px;justify-content:center;margin-bottom:16px;}
+.tag{font-size:12px;padding:5px 13px;border-radius:20px;background:#f4f7f2;color:#7d8a7b;border:1px solid #e4e9df;letter-spacing:.4px;}
+.match-box{display:inline-flex;align-items:baseline;gap:4px;padding:10px 24px;border-radius:18px;background:linear-gradient(135deg,#eef1ea,#f7ece7);margin-bottom:20px;}
+.match-num{font-size:28px;font-weight:700;color:#7d8a7b;line-height:1;}
+.match-unit{font-size:12.5px;color:#9aa396;letter-spacing:.5px;}
+.symptom{font-size:14.5px;line-height:1.95;color:#57554f;text-align:left;margin:0 0 18px;letter-spacing:.1px;}
+.quote-box{
+  background:#f7f4f0;border-left:3px solid var(--sage);
+  border-radius:0 12px 12px 0;padding:14px 16px;
+  font-size:15px;line-height:1.7;color:#6b6862;font-weight:500;
+  letter-spacing:.3px;text-align:left;
+}
+.shot-foot{
+  margin-top:18px;padding-top:14px;border-top:1px dashed #ece6de;
+  font-size:11.5px;color:#b6b2ab;letter-spacing:.8px;
+}
+
+.scroll-hint{
+  text-align:center;font-size:12.5px;color:#b0aca5;
+  letter-spacing:1px;margin:6px 0 20px;
+}
+.scroll-hint .arrow{display:block;font-size:15px;margin-bottom:2px;color:#c5c1ba;}
+
+.detail-card{
+  background:#fff;border-radius:20px;
+  padding:24px 22px;margin-bottom:14px;
+  box-shadow:0 4px 18px rgba(180,170,158,.08);
+}
+.detail-card.soft{background:linear-gradient(160deg,#fbfaf7,#f4f7f2);box-shadow:none;border:1px solid #eef0ea;}
+.card-label{
+  font-size:12px;font-weight:700;letter-spacing:2px;
+  color:var(--sage);margin-bottom:14px;
+  display:flex;align-items:center;gap:8px;
+}
+.card-label::before{content:"";width:14px;height:2px;border-radius:2px;background:var(--sage);opacity:.6;}
+.detail-card p{font-size:14.5px;line-height:2;color:#57554f;margin:0;letter-spacing:.15px;}
+.detail-card ul{list-style:none;padding:0;margin:0;}
+.detail-card li{
+  position:relative;padding-left:20px;
+  font-size:14.5px;line-height:1.9;color:#57554f;
+  margin-bottom:12px;letter-spacing:.1px;
+}
+.detail-card li:last-child{margin-bottom:0;}
+.detail-card li::before{
+  content:"";position:absolute;left:2px;top:12px;
+  width:6px;height:6px;border-radius:50%;
+  background:var(--clay);opacity:.7;
+}
+.detail-card.soft li::before{background:var(--sage);}
+
+.result-alt{
+  font-size:13px;color:#a8a49d;text-align:center;
+  margin:22px 0 20px;letter-spacing:.4px;
+}
+.result-alt b{color:#7d8a7b;font-weight:600;}
+
+@media (max-width:360px){
+  .app{padding:24px 16px 44px;}
+  .cover-title{font-size:24px;}
+  .q-title{font-size:17px;}
+  .result-city{font-size:28px;}
+  .shot-card{padding:26px 20px 18px;}
+}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- ========== 密码页 ========== -->
+  <section id="lock" class="screen active">
+    <div class="lock-wrap">
+      <div class="lock-icon"></div>
+      <h1 class="lock-title">输入访问密码</h1>
+      <p class="lock-sub">购买后你会收到一串 4 位数字密码</p>
+      <input class="lock-input" id="lockInput" type="password" inputmode="numeric" maxlength="4" placeholder="请输入 4 位密码" autocomplete="off">
+      <div class="lock-err" id="lockErr"></div>
+      <button class="btn-main" id="lockBtn">解锁测试</button>
+    </div>
+  </section>
+
+  <!-- ========== 封面 ========== -->
+  <section id="cover" class="screen">
+    <div class="cover-deco"></div>
+    <h1 class="cover-title">测测你的分手人格</h1>
+    <p class="cover-sub">分手后，你是哪种德行？</p>
+    <div class="cover-line"></div>
+    <p class="cover-desc">
+      13 道题，测你分手后的真实状态。<br>
+      是深夜小作文，还是一键蒸发？<br>
+      别装，选最像你的那个。
+    </p>
+    <div class="cover-meta">· 13 题 · 约 2 分钟 · 10 种人格 ·</div>
+    <button class="btn-main" id="startBtn">开始测试</button>
+    <p class="cover-note">结果仅供娱乐 · 请勿对号入座过度</p>
+  </section>
+
+  <!-- ========== 答题 ========== -->
+  <section id="quiz" class="screen">
+    <div class="quiz-top">
+      <button class="back-btn" id="prevBtn">←</button>
+      <div class="progress-wrap">
+        <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+      </div>
+      <div class="progress-num" id="progressNum">1/13</div>
+    </div>
+    <div class="q-card">
+      <div class="q-index" id="qIndex">Q1</div>
+      <h2 class="q-title" id="qTitle"></h2>
+      <div class="opts" id="opts"></div>
+    </div>
+    <button class="btn-main" id="nextBtn" disabled>下一题</button>
+  </section>
+
+  <!-- ========== 结果 ========== -->
+  <section id="result" class="screen">
+
+    <div class="shot-card">
+      <p class="result-label">你的分手人格是</p>
+      <h1 class="result-city" id="rCity"></h1>
+      <div class="result-tags" id="rTags"></div>
+      <div class="match-box">
+        <span class="match-num" id="rMatch">87</span>
+        <span class="match-unit">% 契合度</span>
+      </div>
+      <p class="symptom" id="rSymptom"></p>
+      <div class="quote-box" id="rQuote"></div>
+      <div class="shot-foot" id="rFoot">测测你的分手人格 · 我的结果是「」</div>
+    </div>
+
+    <div class="scroll-hint">
+      <span class="arrow">↓</span>
+      往下滑，看看更完整的你
+    </div>
+
+    <div class="detail-card">
+      <div class="card-label">深度解读</div>
+      <p id="rDepth"></p>
+    </div>
+
+    <div class="detail-card">
+      <div class="card-label">你可能经历过这些场景</div>
+      <ul id="rScenes"></ul>
+    </div>
+
+    <div class="detail-card">
+      <div class="card-label">给你的几句提醒</div>
+      <ul id="rAdvice"></ul>
+    </div>
+
+    <div class="detail-card soft">
+      <div class="card-label">你可能没意识到的优点</div>
+      <p id="rHidden"></p>
+    </div>
+
+    <p class="result-alt" id="rAlt"></p>
+    <button class="btn-main" id="restartBtn">重新测试</button>
+  </section>
+
+</div>
+
+<script>
+/* ========================================================
+   密码
+   ======================================================== */
+const PASSWORD = '0812';
+
+/* ========================================================
+   题目（已按新版替换）
+   ======================================================== */
+const questions = [
+{
+  q:"分手那天，你做的第一件事是？",
+  opts:[
+    {t:"打开备忘录开始写小作文，写到凌晨三点", s:{ESSAY:3, BLAME:1}},
+    {t:"把对方所有联系方式删了，动作快到自己都吓到", s:{CUT:3, GHOST:1}},
+    {t:"发了一条仅自己可见的朋友圈，配图是天空", s:{FINE:2, SPY:1}},
+    {t:"点了份炸鸡，边吃边想“好像也没那么难过”", s:{REBOUND:2, DEAD:1}}
+  ]
+},
+{
+  q:"分手后第一周，你手机里前任的聊天记录？",
+  opts:[
+    {t:"翻来覆去看了百八十遍，连表情包都截图存了", s:{SPY:3, ESSAY:1}},
+    {t:"删了，但云备份还在，自己知道", s:{CUT:2, BLAME:1}},
+    {t:"没删也没看，就让它躺在那儿", s:{DEAD:2, FINE:1}},
+    {t:"删得干干净净，像这个人从没存在过", s:{CUT:3, GHOST:1}}
+  ]
+},
+{
+  q:"深夜两点，你最可能的状态是？",
+  opts:[
+    {t:"在编辑框里打了两千字，最后全删了", s:{ESSAY:3, BLAME:1}},
+    {t:"在看对方微博/小红书/网易云，一条不落", s:{SPY:3}},
+    {t:"在跟朋友语音，嘴上说“我没事”说了一晚上", s:{FINE:3, BLAME:1}},
+    {t:"已经睡了，分手不影响睡眠", s:{DEAD:2, CUT:1}}
+  ]
+},
+{
+  q:"朋友问你“你们为什么分”，你的回答通常是？",
+  opts:[
+    {t:"从认识第一天开始复盘，讲了很久很久", s:{BLAME:3, ESSAY:1}},
+    {t:"“不合适吧”，然后迅速岔开话题", s:{FINE:2, GHOST:1}},
+    {t:"把对方的问题列了张清单，条理清晰", s:{CUT:2, REVENGE:1}},
+    {t:"“我也说不清”，然后真的不再想了", s:{DEAD:2}}
+  ]
+},
+{
+  q:"分手后，你发过最丢人的一条消息是？",
+  opts:[
+    {t:"小作文，三段以上，带标点符号那种", s:{ESSAY:3, BLAME:1}},
+    {t:"“在吗”，然后对方没回，你也没再发", s:{GHOST:2, FINE:1}},
+    {t:"发了一张你们以前的合照，又撤回了", s:{YOYO:3, SPY:1}},
+    {t:"没发过，我的尊严不允许", s:{CUT:2, DEAD:1}}
+  ]
+},
+{
+  q:"看到对方有了新欢，你的第一反应？",
+  opts:[
+    {t:"把新欢的社交账号翻到底，做背调", s:{SPY:3}},
+    {t:"心里咯噔一下，然后跟朋友说“早猜到了”", s:{FINE:2, BLAME:1}},
+    {t:"发一条阴阳怪气的动态，仅对方可见", s:{REVENGE:3}},
+    {t:"哦，然后继续吃我的饭", s:{DEAD:3}}
+  ]
+},
+{
+  q:"分手后，你更接近哪种消费状态？",
+  opts:[
+    {t:"报复性消费，买了一堆用不上的东西", s:{REVENGE:3}},
+    {t:"突然很省，觉得钱要留给自己", s:{CUT:2, BLAME:1}},
+    {t:"跟平时一样，分手不影响我的钱包", s:{FINE:2, DEAD:1}},
+    {t:"给前任买过的东西，全扔了/退了", s:{CUT:2, REVENGE:1}}
+  ]
+},
+{
+  q:"你分手后的睡眠质量？",
+  opts:[
+    {t:"失眠，凌晨四点还在想“如果当时……”", s:{BLAME:3, ESSAY:1}},
+    {t:"睡得着，但做梦老梦到对方", s:{SPY:2, YOYO:1}},
+    {t:"睡得比恋爱时还好，一身轻", s:{CUT:2, DEAD:1}},
+    {t:"正常睡，偶尔想起来会醒一下", s:{FINE:2, DEAD:1}}
+  ]
+},
+{
+  q:"朋友眼中，你分手后的样子是？",
+  opts:[
+    {t:"“你看起来挺好的啊”——但我只是在装", s:{FINE:3}},
+    {t:"明显蔫了，但嘴硬说没事", s:{BLAME:2, FINE:1}},
+    {t:"跟没事人一样，该吃吃该喝喝", s:{DEAD:2, CUT:1}},
+    {t:"突然变得特别积极，健身学习全安排上", s:{REVENGE:3, REBOUND:1}}
+  ]
+},
+{
+  q:"如果前任突然发消息说“想你了”，你会？",
+  opts:[
+    {t:"心跳加速，打了删删了打，最后回了个“？”", s:{ESSAY:2, YOYO:2}},
+    {t:"已读不回，但截图发给了所有知心朋友", s:{SPY:2, GHOST:1}},
+    {t:"回一句“哦”，然后等对方下一句", s:{YOYO:2, FINE:1}},
+    {t:"直接拉黑，不给自己留后路", s:{CUT:3}}
+  ]
+},
+{
+  q:"分手后，你保留最久的一件“遗物”是？",
+  opts:[
+    {t:"聊天记录截图，存在隐藏相册里", s:{SPY:3, ESSAY:1}},
+    {t:"对方送的东西，没扔但也没再用", s:{DEAD:2, FINE:1}},
+    {t:"一件T恤/一件小东西，说不清为什么不扔", s:{YOYO:2, SPY:1}},
+    {t:"什么都没留，清得很干净", s:{CUT:3, GHOST:1}}
+  ]
+},
+{
+  q:"你觉得自己多久能真正走出来？",
+  opts:[
+    {t:"三个月起步，而且需要反复确认“真的结束了”", s:{BLAME:2, ESSAY:1}},
+    {t:"说不准，白天没事，晚上不行", s:{FINE:2, YOYO:1}},
+    {t:"很快，下一个更好", s:{REBOUND:3, REVENGE:1}},
+    {t:"已经走出来了，但偶尔会梦到", s:{DEAD:2, CUT:1}}
+  ]
+},
+{
+  q:"下一段感情里，你最怕自己？",
+  opts:[
+    {t:"又变成那个写小作文的人", s:{ESSAY:3, BLAME:1}},
+    {t:"又假装大度，其实心里在记账", s:{FINE:2, BLAME:2}},
+    {t:"又突然消失，不给任何解释", s:{GHOST:3}},
+    {t:"又太快投入，忘了先看看对方值不值得", s:{REBOUND:3, YOYO:1}}
+  ]
+}
+];
+
+/* ========================================================
+   10 种结果
+   ======================================================== */
+const RESULTS = {
+  ESSAY: {
+    name:"深夜小作文发射器",
+    tags:["深情","内耗","写完就后悔"],
+    symptom:"症状：分手后手机备忘录平均增长 2000 字；发出去的消息永远比对方回的长十倍；凌晨两点觉得自己是全世界最深情的人，早上九点想把自己埋了。",
+    quote:"你写了那么多，对方只回了一个“嗯”。",
+    depth:"你的爱很重，重到需要用文字称重。每一次提笔，其实都是在问「你能不能看见我」。你习惯用长篇大论去确认一段关系的存在，因为在你心里，说得越多，就越像真的。可感情不是作文，字数不等于分数。你不是表达欲太强，你只是太想被认真回应一次。",
+    scenes:[
+      "分手当晚写到凌晨三点，第二天醒来第一件事是看对方回没回",
+      "朋友聚会上一本正经复盘感情，从第一次见面开始讲",
+      "深夜把编辑框里的话全删掉，然后哭着睡着"
+    ],
+    advice:[
+      "写下来可以，但别急着按发送键，给自己留一个 24 小时冷静期",
+      "你的深情不需要对方签收，写给自己也算数",
+      "试着把同样的话说给朋友听，你会发现说出来就轻了一半"
+    ],
+    hidden:"你是一个情感浓度很高的人。你愿意为一段关系认真思考、认真表达，这在这个时代其实是稀缺的。你只是需要把这份认真，分一点给自己。"
+  },
+  GHOST: {
+    name:"人间蒸发型前任",
+    tags:["不解释","体面","冷处理"],
+    symptom:"症状：分手方式是一键消失，不吵不闹不告别；对方至今不知道到底发生了什么；你以为是体面，对方觉得是冷血。",
+    quote:"你消失得那么彻底，连一句“为什么”都没给对方留。",
+    depth:"你不是不痛，你只是觉得解释比离开更累。你习惯把「关门」当成最后的体面——不吵不闹不纠缠，好像这样就能少受一点伤。可有些话没说完，会在你心里反复长出来。你消失得越快，那些没出口的委屈就越容易在深夜找你。",
+    scenes:[
+      "分手当天删好友、退群、清相册，一气呵成，然后手抖了一整晚",
+      "对方发来「我们谈谈」，你看了，没回，也没删",
+      "多年后偶然想起，会想「当时要是说清楚就好了」"
+    ],
+    advice:[
+      "体面不只有消失一种方式，一句「我们不合适」也是体面",
+      "你欠对方的解释，其实也是欠自己的一个句号",
+      "消失很快，但真正走出来，需要你回头看一眼"
+    ],
+    hidden:"你有很强的自我保护能力和行动力。你知道什么时候该抽身，这份果断很多人学不来。只是抽身之后，别忘了好好安顿自己。"
+  },
+  YOYO: {
+    name:"反复横跳型选手",
+    tags:["回头","纠结","管不住手"],
+    symptom:"症状：分手后和前任的聊天记录像心电图；每次都说“这次真的结束了”，每次又都回了头；最恨的不是对方，是管不住手的自己。",
+    quote:"你拉黑他的速度，永远赶不上你后悔的速度。",
+    depth:"你拉黑他，是因为生气；你解除拉黑，是因为舍不得。你在「我值得更好的」和「可是我还爱他」之间来回弹跳，累到不行，却停不下来。你恨的不是他，是那个管不住自己的自己。其实你不是软弱，你只是还没找到比「联系他」更快的止痛药。",
+    scenes:[
+      "凌晨拉黑，早上偷偷解除，看他有没有发现",
+      "说好不联系，第三天发了条「在吗」",
+      "删了又加，加了又删，聊天记录像心电图"
+    ],
+    advice:[
+      "拉黑不是惩罚他，是保护你。要么彻底，要么别做",
+      "每次想联系他的时候，先写下「我为什么想找他」，写完再看",
+      "给自己设一个 21 天联系冷静期，过了再决定"
+    ],
+    hidden:"你心软、重感情，这是很珍贵的品质。你对关系有执念，说明你曾经很认真。只是下次，把这份认真先留一点给自己。"
+  },
+  FINE: {
+    name:"假装没事型",
+    tags:["嘴硬","体面","独自崩溃"],
+    symptom:"症状：分手当天照常上班、照常吃饭、照常回消息；朋友问起来就说“还好啊”；只有你自己知道，你在等一个没人问的时机崩溃。",
+    quote:"你演得太好了，好到连你自己都快信了。",
+    depth:"你太会演了。分手当天照常上班，照常微笑，照常回「我没事」。你把崩溃推迟到没人的深夜，把眼泪收进枕头里。你以为这是成熟，其实你只是不敢让别人看见你疼。你把「不让别人担心」当成了本能，可你自己也需要有人担心一下。",
+    scenes:[
+      "同事问「你最近怎么瘦了」，你说「在减肥」",
+      "朋友聚会你全程热场，回家关上门，一句话也不想说",
+      "有人真心问你「还好吗」，你反而愣了一下"
+    ],
+    advice:[
+      "「我不好」这三个字，说出来天不会塌",
+      "找一个安全的人，允许自己在他面前不体面一次",
+      "情绪不是洪水，你堵得越久，它来得越猛"
+    ],
+    hidden:"你非常体贴，很会照顾别人的感受，是朋友里那个「让人放心」的人。你只是忘了，你也可以被人照顾。允许自己被看见，不是软弱。"
+  },
+  SPY: {
+    name:"视奸型选手",
+    tags:["手比嘴诚实","背调","放不下"],
+    symptom:"症状：对方微博、小红书、网易云、抖音，你一个不落；连他新关注的陌生人都要翻一遍；你比他的现任还了解他的近况。",
+    quote:"你嘴上说放下了，手指比谁都诚实。",
+    depth:"你删了他，但没删他的主页。你一遍遍刷新他的动态，像在收集他还活着的证据。你嘴上说放下了，手指却比谁都诚实。你不是犯贱，你只是还没找到别的地方安放注意力。你盯着的不是他，是那个「如果他还更新，说明我们还有关系」的幻觉。",
+    scenes:[
+      "凌晨两点刷他的朋友圈，翻到一年前",
+      "把他新关注的陌生人翻了个底朝天",
+      "看到他发新动态，假装不在意，却截图存了"
+    ],
+    advice:[
+      "取关不是绝情，是给自己断粮",
+      "想刷的时候，先问自己「刷完我会更舒服吗」",
+      "把刷他的时间，换成刷一个你真正喜欢的东西"
+    ],
+    hidden:"你观察力强、记性好，对在乎的人有超乎寻常的耐心。这份专注如果用在喜欢的事上，会很可怕。你只是暂时把镜头对准了一个不该对准的人。"
+  },
+  BLAME: {
+    name:"自我PUA型",
+    tags:["复盘","揽责","不放过自己"],
+    symptom:"症状：反复复盘“如果我当时……是不是就不会分”；把对方的问题也解释成自己的问题；朋友替你骂他，你还在替他说话。",
+    quote:"你替所有人找了理由，唯独没放过自己。",
+    depth:"分手后，你成了自己的检察官。你反复复盘每一个细节，试图找出「如果当时我……」的答案。你把所有责任都揽到自己身上，好像只要是自己错，就能解释这一切。可有些分开，真的不是你不够好。你那么努力地审判自己，其实是怕承认「这段关系本来就走不下去」。",
+    scenes:[
+      "深夜反复想「如果那天我没说那句话」",
+      "朋友替你骂他，你还在替他找理由",
+      "把对方的问题，也解释成自己的问题"
+    ],
+    advice:[
+      "一段关系结束，责任从来不是一个人的",
+      "你可以复盘，但别审判自己",
+      "试着写下「不是我的错的三件事」，每天读一遍"
+    ],
+    hidden:"你有很强的反思能力和责任心，愿意为关系承担，这在亲密关系里很珍贵。只是请记住，反思是为了成长，不是用来自我惩罚的。"
+  },
+  REVENGE: {
+    name:"报复型选手",
+    tags:["变好","演给他看","不甘心"],
+    symptom:"症状：分手后立刻健身、换发型、发美照；发每一条动态都在想“他看到会怎么想”；你以为在报复他，其实在演给他看。",
+    quote:"你变好看了，但你还是希望他知道。",
+    depth:"分手后你突然健身、换发型、发美照，每一条动态都在想「他看到会怎么想」。你以为你在报复他，其实你在演给他看。你那么努力变好，一半是为了自己，一半是想让他后悔。不甘心不是坏情绪，它只是太吵，吵得你听不见自己真正想要什么。",
+    scenes:[
+      "分手后第一周办了健身卡，发朋友圈只给他看",
+      "每次发美照都要想「他看到会点赞吗」",
+      "听说他有了新欢，立刻发了一条更精致的动态"
+    ],
+    advice:[
+      "变好可以是为了他，但别只为了他",
+      "当你不再想知道「他会怎么想」，你就真的自由了",
+      "把「气死他」换成「取悦我」，会轻松很多"
+    ],
+    hidden:"你行动力强、有韧劲，能把痛苦转化成向上的力量。这股劲很珍贵。等你哪天变好只是为了自己，你会真正发光。"
+  },
+  REBOUND: {
+    name:"立刻找下家型",
+    tags:["怕空窗","快进快出","绕圈"],
+    symptom:"症状：分手后一周内开始疯狂社交；新认识的人身上总有前任的影子；你以为在往前走，其实在绕圈。",
+    quote:"你换的是人，没换的是那份怕空下来的心。",
+    depth:"你受不了空窗期。不是因为你花心，而是安静下来太疼。你习惯用新的关系去填补旧的空洞，可每次新的人身上，都隐约有旧人的影子。你以为在往前走，其实在绕圈。你不是离不开某个人，你是还没学会一个人待着不慌。",
+    scenes:[
+      "分手后一周开始疯狂社交，认识谁都想试试",
+      "新对象身上总有前任的某个习惯或语气",
+      "一个人待着超过三天就慌，必须找人陪"
+    ],
+    advice:[
+      "空窗期不是惩罚，是给自己充电的时间",
+      "试着一个人待一个周末，你会发现没那么可怕",
+      "新的人值得被完整地爱，而不是被用来填坑"
+    ],
+    hidden:"你热情、主动，有很强的建立关系的能力。你不是不会爱，你只是太怕一个人。等你学会和自己待着，你的爱会更完整。"
+  },
+  CUT: {
+    name:"冷静切割型",
+    tags:["删得干净","不回头","体面"],
+    symptom:"症状：删联系方式、退共同群、清相册，一气呵成；不吵不闹不解释；别人觉得你冷血，你只是觉得没必要拖。",
+    quote:"你不是不难过，你只是不允许自己难看。",
+    depth:"你分手的样子，像在删除一个不用的 App。删联系方式、退群、清相册，一气呵成。别人觉得你冷血，其实你只是觉得，拖泥带水比难过更难看。你允许自己难过，但不允许自己难看。只是切割是处理关系，不是处理情绪，后者也需要被安顿。",
+    scenes:[
+      "分手当天清理完所有痕迹，然后一个人安静了很久",
+      "对方求复合，你礼貌拒绝，理由清晰",
+      "朋友说你太狠，你笑笑不解释"
+    ],
+    advice:[
+      "你的果断很好，但别忘了给自己留一个哭的出口",
+      "切割是处理关系，不是处理情绪。情绪也要安顿",
+      "偶尔允许自己不体面一次，没关系"
+    ],
+    hidden:"你清醒、果断、有边界感，很少被情绪裹挟。这种能力让你在感情里不容易吃亏。只是坚强久了，记得也有人愿意接住你。"
+  },
+  DEAD: {
+    name:"装死型",
+    tags:["不动","已读不回","就这样吧"],
+    symptom:"症状：不删不拉黑不联系，也不发任何动态；对方发消息你已读不回，但也没删；朋友问起来你就说“就这样吧”。",
+    quote:"你什么都没做，但对方什么都不敢问。",
+    depth:"你分手后最大的动作，就是没有动作。不删不拉黑不联系，也不发动态。你以为自己已经放下了，其实你只是把所有情绪按了静音。你不是不在乎，你只是不知道该怎么表达在乎。装死是一种保护，但保护久了，你自己也会被困在里面。",
+    scenes:[
+      "对方发消息你已读不回，但也没删",
+      "朋友问起来你就说「就这样吧」",
+      "不主动联系，也不拒绝联系，像一潭死水"
+    ],
+    advice:[
+      "装死是一种保护，但别让它成为习惯",
+      "情绪不是不吭声就不存在，它只是换了个地方待着",
+      "试着说一句真话，哪怕只是「我有点难过」"
+    ],
+    hidden:"你情绪稳定、不折腾，是很多人眼里「好相处」的人。你只是把太多东西收起来了。允许自己有点波澜，也是一种生命力。"
+  }
+};
+
+const $ = s => document.querySelector(s);
+let current = 0;
+const answers = new Array(questions.length).fill(null);
+
+function show(id){
+  document.querySelectorAll('.screen').forEach(el => el.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0,0);
+}
+
+/* ---------- 密码验证 ---------- */
+function checkLock(){
+  const val = $('#lockInput').value.trim();
+  if (val === PASSWORD){
+    $('#lockErr').textContent = '';
+    show('cover');
+  } else {
+    $('#lockErr').textContent = '密码不对，再检查一下～';
+    $('#lockInput').value = '';
+    $('#lockInput').focus();
+  }
+}
+$('#lockBtn').addEventListener('click', checkLock);
+$('#lockInput').addEventListener('keydown', e => { if (e.key === 'Enter') checkLock(); });
+
+/* ---------- 渲染题目 ---------- */
+function renderQuestion(){
+  const q = questions[current];
+  $('#qIndex').textContent = 'Q' + (current + 1);
+  $('#qTitle').textContent = q.q;
+  $('#progressNum').textContent = (current + 1) + '/' + questions.length;
+  $('#progressFill').style.width = ((current + 1) / questions.length * 100) + '%';
+
+  const box = $('#opts');
+  box.innerHTML = '';
+  q.opts.forEach((o, i) => {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'opt' + (answers[current] === i ? ' selected' : '');
+    b.innerHTML = '<span class="dot"></span>' + o.t;
+    b.addEventListener('click', () => {
+      answers[current] = i;
+      Array.from(box.children).forEach((el, j) => el.classList.toggle('selected', j === i));
+      updateNextBtn();
+    });
+    box.appendChild(b);
+  });
+
+  $('#prevBtn').style.visibility = current === 0 ? 'hidden' : 'visible';
+  updateNextBtn();
+  window.scrollTo(0,0);
+}
+
+function updateNextBtn(){
+  const btn = $('#nextBtn');
+  btn.disabled = answers[current] === null;
+  btn.textContent = current === questions.length - 1 ? '查看结果' : '下一题';
+}
+
+/* ---------- 计分 ---------- */
+function computeResult(){
+  const score = {};
+  for (const k in RESULTS) score[k] = 0;
+
+  questions.forEach((q, i) => {
+    const a = answers[i];
+    if (a === null) return;
+    const s = q.opts[a].s;
+    for (const k in s){
+      if (score[k] === undefined) score[k] = 0;
+      score[k] += s[k];
+    }
+  });
+
+  let best = 'ESSAY', bestScore = -1;
+  for (const k in score){
+    if (score[k] > bestScore){ bestScore = score[k]; best = k; }
+  }
+
+  const pct = Math.min(96, Math.max(65, Math.round(60 + (bestScore / questions.length) * 36)));
+  return { key: best, pct, score };
+}
+
+/* ---------- 结果 ---------- */
+function showResult(){
+  const { key, pct, score } = computeResult();
+  const r = RESULTS[key];
+
+  $('#rCity').textContent = r.name;
+  $('#rMatch').textContent = pct;
+  $('#rTags').innerHTML = r.tags.map(t => '<span class="tag">' + t + '</span>').join('');
+  $('#rSymptom').textContent = r.symptom;
+  $('#rQuote').textContent = '「' + r.quote + '」';
+  $('#rFoot').textContent = '测测你的分手人格 · 我的结果是「' + r.name + '」';
+
+  $('#rDepth').textContent = r.depth;
+  $('#rScenes').innerHTML = r.scenes.map(s => '<li>' + s + '</li>').join('');
+  $('#rAdvice').innerHTML = r.advice.map(s => '<li>' + s + '</li>').join('');
+  $('#rHidden').textContent = r.hidden;
+
+  const sorted = Object.keys(score).filter(k => k !== key).sort((a,b) => score[b] - score[a]);
+  const alts = sorted.slice(0, 2).map(k => RESULTS[k].name);
+  $('#rAlt').innerHTML = '你身上也有一点：<b>' + alts.join('</b> · <b>') + '</b>';
+
+  show('result');
+}
+
+/* ---------- 事件 ---------- */
+$('#startBtn').addEventListener('click', () => {
+  current = 0;
+  answers.fill(null);
+  renderQuestion();
+  show('quiz');
+});
+
+$('#nextBtn').addEventListener('click', () => {
+  if (answers[current] === null) return;
+  if (current < questions.length - 1){
+    current++;
+    renderQuestion();
+  } else {
+    showResult();
+  }
+});
+
+$('#prevBtn').addEventListener('click', () => {
+  if (current > 0){ current--; renderQuestion(); }
+});
+
+$('#restartBtn').addEventListener('click', () => {
+  answers.fill(null);
+  current = 0;
+  $('#progressFill').style.width = '0%';
+  show('cover');
+});
+
+/* 初始化 */
+renderQuestion();
+</script>
+</body>
+</html>
